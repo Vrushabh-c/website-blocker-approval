@@ -84,8 +84,8 @@
             <p><strong>Requested on:</strong> <span id="request-date"></span></p>
         </div>
         <div class="button-group">
-            <button class="approve-btn" onclick="handleApproval(true)">Approve Request</button>
-            <button class="deny-btn" onclick="handleApproval(false)">Deny Request</button>
+            <button id="approve-btn" class="approve-btn">Approve Request</button>
+            <button id="deny-btn" class="deny-btn">Deny Request</button>
         </div>
         <div id="status" class="status"></div>
     </div>
@@ -100,6 +100,10 @@
         // Display request details
         document.getElementById('site-name').textContent = site;
         document.getElementById('request-date').textContent = new Date().toLocaleString();
+
+        // Add event listeners to buttons
+        document.getElementById('approve-btn').addEventListener('click', () => handleApproval(true));
+        document.getElementById('deny-btn').addEventListener('click', () => handleApproval(false));
 
         function handleApproval(approved) {
             const statusElement = document.getElementById('status');
