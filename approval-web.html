@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Website Unblock Request Approval</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f8f9fa;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+        .request-details {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 20px 0;
+        }
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.2s;
+        }
+        .approve-btn {
+            background: #2ecc71;
+            color: white;
+        }
+        .approve-btn:hover {
+            background: #27ae60;
+        }
+        .deny-btn {
+            background: #e74c3c;
+            color: white;
+        }
+        .deny-btn:hover {
+            background: #c0392b;
+        }
+        .status {
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 20px;
+            display: none;
+        }
+        .success {
+            background: #d4edda;
+            color: #155724;
+        }
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        .extension-id {
+            font-family: monospace;
+            background: #f8f9fa;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Website Unblock Request</h1>
+        <div class="request-details">
+            <p><strong>Website:</strong> <span id="site-name"></span></p>
+            <p><strong>Requested on:</strong> <span id="request-date"></span></p>
+        </div>
+        <div class="button-group">
+            <button class="approve-btn" onclick="handleApproval(true)">Approve Request</button>
+            <button class="deny-btn" onclick="handleApproval(false)">Deny Request</button>
+        </div>
+        <div id="status" class="status"></div>
+    </div>
+
+    <script>
+        // Get request details from URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const requestId = urlParams.get('id');
+        const site = urlParams.get('site');
+        const extensionId = urlParams.get('extensionId');
+
+        // Display request details
+        document.getElementById('site-name').textContent = site;
+        document.getElementById('request-date').textContent = new Date().toLocaleString();
+
+        function handleApproval(approved) {
+            const statusElement = document.getElementById('status');
+            statusElement.style.display = 'block';
+
+            // Create the extension URL
+            const extensionUrl = `chrome-extension://${extensionId}/approval.html?id=${requestId}&site=${encodeURIComponent(site)}&approved=${approved}`;
+
+            // Open the extension URL in a new tab
+            window.open(extensionUrl, '_blank');
+
+            if (approved) {
+                statusElement.textContent = 'Request approved! The website will be unblocked.';
+                statusElement.className = 'status success';
+            } else {
+                statusElement.textContent = 'Request denied. The website will remain blocked.';
+                statusElement.className = 'status error';
+            }
+
+            // Disable buttons after action
+            document.querySelectorAll('button').forEach(btn => btn.disabled = true);
+        }
+    </script>
+</body>
+</html> 
